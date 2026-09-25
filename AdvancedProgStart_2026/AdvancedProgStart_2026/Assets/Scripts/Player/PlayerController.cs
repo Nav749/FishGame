@@ -22,6 +22,6 @@ public class PlayerController : MonoBehaviour
         //Fire Attacks
         if (InputManager.Instance.AttackPresed) body.Fire();
 
-        if (InputManager.Instance.AltAttack) body.Fire();
+        if (InputManager.Instance.AltAttack) body.Fire(Bulllet.BulletType.Grenade);
     }
 }

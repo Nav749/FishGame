@@ -840,6 +840,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6babbade789f9304ebec4c82a97f668d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBody
+  fireLocation: {fileID: 1848280170}
+  turret: {fileID: 1099892165}
+  moveSpeed: 5
+  rotationSpeed: 50
+  bullet:
+  - {fileID: 8537833330422517339, guid: 33f2afafc42df85459fa61e1efb7d208, type: 3}
+  - {fileID: 2279112613424164278, guid: 0ffffed8ae6623a4b93ad5c777981d4e, type: 3}
 --- !u!1 &1099892165
 GameObject:
   m_ObjectHideFlags: 0
