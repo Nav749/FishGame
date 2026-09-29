@@ -15,6 +15,7 @@ public class PlayerBody : MonoBehaviour
     [SerializeField] private float rotationSpeed = 50f;
 
     [SerializeField] Bulllet[] bullet;
+    [SerializeField] Sword sword;
 
     private float direction;
     public float Direction 
@@ -44,6 +45,17 @@ public class PlayerBody : MonoBehaviour
         Quaternion deltaRot = Quaternion.Euler(rotationDir * Time.fixedDeltaTime * new Vector3(0, rotationSpeed, 0));
 
         rb.MoveRotation(rb.rotation *  deltaRot);
+    }
+
+    public void Swipe()
+    {
+        Sword s = sword;
+
+        if(s != null)
+        {
+            s = Instantiate(s.gameObject, fireLocation.position, Quaternion.identity).GetComponent<Sword>();
+            s.gameObject.SetActive(true);
+        }
     }
 
     public void Fire(Bulllet.BulletType type = Bulllet.BulletType.Default)

@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
         body.RotationDir = move.x;
 
         //Fire Attacks
-        if (InputManager.Instance.AttackPresed) body.Fire();
+        if (InputManager.Instance.AttackPresed) body.Swipe();
 
         if (InputManager.Instance.AltAttack) body.Fire(Bulllet.BulletType.Grenade);
     }
