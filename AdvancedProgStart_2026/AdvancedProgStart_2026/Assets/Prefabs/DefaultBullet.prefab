@@ -48,7 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51e1aa5679be82b4c9eb5c1ef0bdd7f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bulllet
-  speed: 5
+  type: 0
+  speed: 10
   lifeTime: 5
 --- !u!33 &33598652517847966
 MeshFilter:

@@ -19,6 +19,18 @@ public class InputManager : MonoBehaviour
     public bool AttackPresed {get { return attack.WasPressedThisFrame(); }}
     public bool AltAttack{get { return altAttack.WasPressedThisFrame(); }}
 
+    public Vector2 MousePos {
+        get 
+        {  
+            if(Mouse.current == null)
+            {
+                return Vector2.zero;
+            }
+
+            return Mouse.current.position.ReadValue();
+        } 
+    }
+
     private void Awake()
     {
         //setting our singleton instance to this object

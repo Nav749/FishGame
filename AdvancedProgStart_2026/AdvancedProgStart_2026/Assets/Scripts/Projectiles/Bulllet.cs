@@ -21,9 +21,9 @@ public class Bulllet : MonoBehaviour
         direction = dir;
     }
 
-    protected virtual void Update()
+    protected virtual void FixedUpdate()
     {
-        transform.Translate(speed * Time.deltaTime * direction);
+        transform.Translate(speed * Time.fixedDeltaTime * direction);
     }
 
     protected virtual void OnTriggerEnter(Collider other)

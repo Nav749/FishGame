@@ -49,9 +49,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Grenade
   type: 1
-  speed: 5
-  lifeTime: 10
-  explosionSize: 1e+16
+  speed: 10
+  lifeTime: 20
+  explosionSize: 1e+11
+  expandSpeed: 10000
+  fadeAmount: 0.1
+  fadeWait: 0.01
 --- !u!33 &33598652517847966
 MeshFilter:
   m_ObjectHideFlags: 0
