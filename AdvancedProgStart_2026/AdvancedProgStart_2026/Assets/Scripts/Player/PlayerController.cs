@@ -5,6 +5,12 @@ public class PlayerController : MonoBehaviour
     //send data ONE DIRECTIONAL to the player
     private PlayerBody body;
 
+    [SerializeField] float sensX = 200f;
+    [SerializeField] float sensY = 200f;
+
+    private float xRotation;
+    private float yRotation;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,35 +33,23 @@ public class PlayerController : MonoBehaviour
         //Fire Attacks
         if (InputManager.Instance.AttackPresed) body.Swipe();
 
-        if (InputManager.Instance.AltAttack) body.Fire(Bulllet.BulletType.Grenade);
+        if (InputManager.Instance.AltAttack) body.Fire();
     }
 
     private void HandleMouse()
     {
-        Ray r = Camera.main.ScreenPointToRay(InputManager.Instance.MousePos);
+        Vector2 mouse = InputManager.Instance.MousePos;
 
-        Plane plane = new Plane(Vector3.up, body.Turret.position);
+        float mouseX = mouse.x * Time.deltaTime * sensX;
+        float mouseY = mouse.y * Time.deltaTime * sensY;
 
-        float distanceToPlane;
+        yRotation += mouseX;
+        yRotation = Mathf.Clamp(yRotation, -90f, 90f);
 
-        if(plane.Raycast(r, out distanceToPlane))
-        {
-            //get the point along the ray that intersects with the plane
-            Vector3 mouseWorldPos = r.GetPoint(distanceToPlane);
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-            //Calculate an aim dirction for turret
-            Vector3 aimDir = mouseWorldPos - body.Turret.position;
-            aimDir.y = 0f;
-
-            //update turret pos
-            body.UpdateTurret(aimDir);
-
-            //draw debug lines
-            Debug.DrawRay(body.transform.position, mouseWorldPos, Color.red);
-            Debug.DrawRay(r.origin, mouseWorldPos, Color.green);
-
-            Debug.DrawRay(mouseWorldPos, Vector3.back, Color.blue);
-            Debug.DrawRay(mouseWorldPos, Vector3.left, Color.blue);
-        }
+        body.Turret.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+        body.UpdateTurret(body.Turret.forward);
     }
 }

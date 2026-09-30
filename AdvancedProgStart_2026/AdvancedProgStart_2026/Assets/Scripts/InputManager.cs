@@ -12,24 +12,14 @@ public class InputManager : MonoBehaviour
     private InputActionMap playerMap;
 
     //input actions themselves
-    private InputAction move, attack, altAttack;
+    private InputAction move, attack, altAttack, mouse;
 
     //public properties: variables that do not store a value, they call a functionality to get the value when accessed.
     public Vector2 MoveVector {get { return move.ReadValue<Vector2>(); }}
     public bool AttackPresed {get { return attack.WasPressedThisFrame(); }}
     public bool AltAttack{get { return altAttack.WasPressedThisFrame(); }}
 
-    public Vector2 MousePos {
-        get 
-        {  
-            if(Mouse.current == null)
-            {
-                return Vector2.zero;
-            }
-
-            return Mouse.current.position.ReadValue();
-        } 
-    }
+    public Vector2 MousePos {get { return mouse.ReadValue<Vector2>(); }}
 
     private void Awake()
     {
@@ -42,6 +32,8 @@ public class InputManager : MonoBehaviour
         move = playerMap.FindAction("Move");
         attack = playerMap.FindAction("Attack");
         altAttack = playerMap.FindAction("Alt Attack");
+
+        mouse = playerMap.FindAction("Look");
     }
 
     

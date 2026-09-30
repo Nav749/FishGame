@@ -17,6 +17,10 @@ public class PlayerBody : MonoBehaviour
 
     [SerializeField] Bulllet[] bullet;
     [SerializeField] Sword sword;
+    [SerializeField] Grapple grapple;
+
+    public bool activeGrapple = false;
+    private Vector3 velocityToSet;
 
     Vector2 moveInput;
     public Vector2 MoveInout
@@ -36,9 +40,14 @@ public class PlayerBody : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 moveDir = new Vector3(moveInput.x, 0f, moveInput.y) * moveSpeed * Time.fixedDeltaTime;
+        if(!activeGrapple)
+        {
+            Vector3 moveDir = new Vector3(moveInput.x, 0f, moveInput.y) * moveSpeed * Time.fixedDeltaTime;
 
-        rb.MovePosition(transform.position +  moveDir);
+            rb.MovePosition(transform.position +  moveDir);
+        }
+
+        Debug.DrawRay(fireLocation.position, fireLocation.forward * 30, Color.red);
     }
 
     public void Swipe()
@@ -60,6 +69,7 @@ public class PlayerBody : MonoBehaviour
     {
         dir.Normalize();
         turret.transform.forward = dir;
+        fireLocation.forward = dir;
     }
 
     public void UpdateMove(Vector2 dir)
@@ -69,26 +79,47 @@ public class PlayerBody : MonoBehaviour
 
     public void Fire(Bulllet.BulletType type = Bulllet.BulletType.Default)
     {
-        Vector3 dir = fireLocation.position - transform.position;
+        Vector3 dir = fireLocation.forward;
         
-        dir.y = type == Bulllet.BulletType.Default ? 0f : 1.5f;
         dir.Normalize();
 
-        Bulllet b = null;
-        foreach(var blt  in bullet)
-        {
-            if(blt.type == type)
-            {
-                b = blt; 
-                break;
-            }
-        }
+        Grapple g = grapple;
 
-        if(b != null)
+        if(g != null)
         {
-            b = Instantiate(b.gameObject, fireLocation.position, Quaternion.identity).GetComponent<Bulllet>();
-            b.gameObject.SetActive(true);
-            b.Fire(dir);
+            g = Instantiate(g.gameObject, fireLocation.position, Quaternion.identity).GetComponent<Grapple>();
+            g.gameObject.SetActive(true);
+            g.UpdateDirection(dir);
+            g.UpdateStartPoint(fireLocation);
+            g.UpdateBody(this);
+            g.StartGrapple();
         }
+    }
+
+    private Vector3 CalculateLaunch(Vector3 startPoint, Vector3 endPoint, float trajectoryHeight)
+    {
+        float gravity = Physics.gravity.y;
+
+        float displacementY = endPoint.y - startPoint.y;
+        Vector3 displacementXZ = new Vector3(endPoint.x - startPoint.x, 0f, endPoint.z - startPoint.z);
+
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * trajectoryHeight);
+        Vector3 velocityXZ = displacementXZ / (Mathf.Sqrt(-2 * trajectoryHeight / gravity) + Mathf.Sqrt(2 * (displacementY - trajectoryHeight) / gravity));
+
+        return velocityXZ + velocityY;
+    }
+
+    public void JumpToPosition(Vector3 targetPosition, float trajectoryHeight)
+    {
+        activeGrapple = true;
+
+        velocityToSet = CalculateLaunch(transform.position, targetPosition, trajectoryHeight);
+
+        Invoke("SetVelocity", 0.1f);
+    }
+
+    private void SetVelocity()
+    {
+        rb.linearVelocity = velocityToSet;
     }
 }
