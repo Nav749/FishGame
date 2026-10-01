@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         body = GetComponentInChildren<PlayerBody>();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
@@ -44,10 +45,11 @@ public class PlayerController : MonoBehaviour
         float mouseY = mouse.y * Time.deltaTime * sensY;
 
         yRotation += mouseX;
-        yRotation = Mathf.Clamp(yRotation, -90f, 90f);
 
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+        body.transform.rotation = Quaternion.Euler(0, yRotation, 0);
 
         body.Turret.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         body.UpdateTurret(body.Turret.forward);

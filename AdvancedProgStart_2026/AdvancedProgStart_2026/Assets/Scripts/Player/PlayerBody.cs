@@ -1,7 +1,4 @@
-using JetBrains.Annotations;
 using System;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PlayerBody : MonoBehaviour
@@ -42,12 +39,15 @@ public class PlayerBody : MonoBehaviour
     {
         if(!activeGrapple)
         {
-            Vector3 moveDir = new Vector3(moveInput.x, 0f, moveInput.y) * moveSpeed * Time.fixedDeltaTime;
+            Vector3 relativeForward = transform.forward * moveInput.y;
+            Vector3 relativeRight = transform.right * moveInput.x;
+
+            Vector3 relativeAngle = relativeForward + relativeRight;
+
+            Vector3 moveDir = new Vector3(relativeAngle.x, 0, relativeAngle.z) * moveSpeed * Time.fixedDeltaTime;
 
             rb.MovePosition(transform.position +  moveDir);
         }
-
-        Debug.DrawRay(fireLocation.position, fireLocation.forward * 30, Color.red);
     }
 
     public void Swipe()
@@ -70,6 +70,8 @@ public class PlayerBody : MonoBehaviour
         dir.Normalize();
         turret.transform.forward = dir;
         fireLocation.forward = dir;
+        Quaternion deltaRot = Quaternion.Euler(dir * Time.deltaTime);
+        rb.MoveRotation(rb.rotation * deltaRot);
     }
 
     public void UpdateMove(Vector2 dir)
