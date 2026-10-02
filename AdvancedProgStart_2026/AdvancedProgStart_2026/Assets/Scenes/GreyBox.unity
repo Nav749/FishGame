@@ -998,12 +998,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBody
   fireLocation: {fileID: 1848280170}
   turret: {fileID: 1099892165}
-  moveSpeed: 5
-  bullet:
-  - {fileID: 8537833330422517339, guid: 33f2afafc42df85459fa61e1efb7d208, type: 3}
-  - {fileID: 2279112613424164278, guid: 0ffffed8ae6623a4b93ad5c777981d4e, type: 3}
+  moveSpeed: 10
   sword: {fileID: 1333528149282482044, guid: 3b6cb298ff596c74d824ec9ae37d4072, type: 3}
   grapple: {fileID: 4919587774625279472, guid: d932fdd4bbd473d45952fe8e8ffc8da1, type: 3}
+  cam: {fileID: 414550751}
+  grappleFov: 105
+  normalFov: 60
   activeGrapple: 0
 --- !u!1 &1099892165
 GameObject:

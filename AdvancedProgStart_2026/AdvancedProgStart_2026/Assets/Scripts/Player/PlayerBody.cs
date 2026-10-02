@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using Unity.Cinemachine;
+using System.Collections;
 
 public class PlayerBody : MonoBehaviour
 {
@@ -12,12 +14,16 @@ public class PlayerBody : MonoBehaviour
 
     [SerializeField] private float moveSpeed = 5f;
 
-    [SerializeField] Bulllet[] bullet;
     [SerializeField] Sword sword;
     [SerializeField] Grapple grapple;
 
+    [SerializeField] CinemachineCamera cam;
+    public float grappleFov = 95f;
+    public float normalFov = 80f;
+
     public bool activeGrapple = false;
     private Vector3 velocityToSet;
+    private Vector3 velocity;
 
     Vector2 moveInput;
     public Vector2 MoveInout
@@ -33,6 +39,12 @@ public class PlayerBody : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        velocity = Vector3.zero;
+    }
+
+    private void Start()
+    {
+        cam.Lens.FieldOfView = normalFov;
     }
 
     private void FixedUpdate()
@@ -46,8 +58,10 @@ public class PlayerBody : MonoBehaviour
 
             Vector3 moveDir = new Vector3(relativeAngle.x, 0, relativeAngle.z) * moveSpeed * Time.fixedDeltaTime;
 
-            rb.MovePosition(transform.position +  moveDir);
+            rb.linearVelocity += moveDir;
         }
+
+        Debug.Log("Rigidbody Velocity: " + rb.linearVelocity);
     }
 
     public void Swipe()
@@ -122,6 +136,21 @@ public class PlayerBody : MonoBehaviour
 
     private void SetVelocity()
     {
-        rb.linearVelocity = velocityToSet;
+        rb.linearVelocity += velocityToSet;
+    }
+
+    public IEnumerator ChangeFov(float goalFov, float transitionTime)
+    {
+        float currFov = cam.Lens.FieldOfView;
+        float time = 0f;
+
+        while(time < transitionTime)
+        {
+            cam.Lens.FieldOfView = Mathf.Lerp(currFov, goalFov, time/transitionTime);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        cam.Lens.FieldOfView = goalFov;
     }
 }

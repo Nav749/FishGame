@@ -62,10 +62,14 @@ public class Grapple : MonoBehaviour
 
         grappling = true;
 
+        StopAllCoroutines();
+
         RaycastHit hit;
         if(Physics.Raycast(originPoint.position, direction, out hit, grappleDistance, Grappleable))
         {
             grapplePoint = hit.point;
+
+            StartCoroutine(body.ChangeFov(body.grappleFov, grappleDelay));
 
             Invoke("ExecuteGrapple", grappleDelay);
         }
@@ -92,6 +96,8 @@ public class Grapple : MonoBehaviour
         if(grapplePointRelativeYPos < 0) highestPointOnArc = overshootYAxis;
 
         body.JumpToPosition(grapplePoint, highestPointOnArc);
+
+        StartCoroutine(body.ChangeFov(body.normalFov, 1f));
 
         Invoke("StopGrapple", 1f);
     }
