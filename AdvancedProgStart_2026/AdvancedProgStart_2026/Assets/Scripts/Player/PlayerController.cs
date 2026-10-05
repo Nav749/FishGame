@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        body.transform.rotation = Quaternion.Euler(0, yRotation, 0);
+        body.transform.rotation = Quaternion.Euler(Mathf.Clamp(xRotation, -20f, 20f), yRotation, 0);
 
         body.Turret.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         body.UpdateTurret(body.Turret.forward);

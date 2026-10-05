@@ -12,6 +12,7 @@ public class Pickup : MonoBehaviour
     private void OnDestroy()
     {
         UIManager.Instance.UpdatePickupCounter();
+        StatManager.Instance.IncrementSpeedStat();
     }
 
     private void OnTriggerEnter(Collider other)

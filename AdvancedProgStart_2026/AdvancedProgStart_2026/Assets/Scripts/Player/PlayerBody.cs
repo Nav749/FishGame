@@ -56,12 +56,10 @@ public class PlayerBody : MonoBehaviour
 
             Vector3 relativeAngle = relativeForward + relativeRight;
 
-            Vector3 moveDir = new Vector3(relativeAngle.x, 0, relativeAngle.z) * moveSpeed * Time.fixedDeltaTime;
+            Vector3 moveDir = new Vector3(relativeAngle.x, 0, relativeAngle.z) * moveSpeed * StatManager.Instance.SpeedBoost * Time.fixedDeltaTime;
 
             rb.linearVelocity += moveDir;
         }
-
-        Debug.Log("Rigidbody Velocity: " + rb.linearVelocity);
     }
 
     public void Swipe()
