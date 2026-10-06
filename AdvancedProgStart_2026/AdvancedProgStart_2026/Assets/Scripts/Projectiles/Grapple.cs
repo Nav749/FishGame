@@ -1,9 +1,11 @@
+using System.Collections;
 using UnityEngine;
 
 public class Grapple : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private LayerMask Grappleable;
+    [SerializeField] private LayerMask Pullable;
 
     private Transform originPoint;
     private Vector3 direction;
@@ -62,10 +64,25 @@ public class Grapple : MonoBehaviour
 
         grappling = true;
 
+        body.activeGrapple = true;
+
         StopAllCoroutines();
 
         RaycastHit hit;
-        if(Physics.Raycast(originPoint.position, direction, out hit, grappleDistance, Grappleable))
+        if (Physics.Raycast(originPoint.position, direction, out hit, grappleDistance, Pullable))
+        {
+            grapplePoint = hit.point;
+
+            GameObject g = hit.collider.gameObject;
+            Rigidbody rb;
+            if (g.TryGetComponent<Rigidbody>(out rb))
+            {
+                StartCoroutine(PullObject(rb, originPoint.position, grappleDelay));
+            }
+            Invoke("StopGrapple", grappleDelay);
+        }
+        
+        else if (Physics.Raycast(originPoint.position, direction, out hit, grappleDistance, Grappleable))
         {
             grapplePoint = hit.point;
 
@@ -74,11 +91,11 @@ public class Grapple : MonoBehaviour
             Invoke("ExecuteGrapple", grappleDelay);
         }
         else
-        {
-            grapplePoint = originPoint.position + direction * grappleDistance;
+    {
+        grapplePoint = originPoint.position + direction * grappleDistance;
 
-            Invoke("StopGrapple", grappleDelay);
-        }
+        Invoke("StopGrapple", grappleDelay);
+    }
 
         lr.enabled = true;
         lr.SetPosition(1, grapplePoint);
@@ -102,7 +119,7 @@ public class Grapple : MonoBehaviour
         Invoke("StopGrapple", 1f);
     }
 
-    private void StopGrapple()
+    public void StopGrapple()
     {
         grappling = false;
 
@@ -113,5 +130,23 @@ public class Grapple : MonoBehaviour
         body.activeGrapple = false;
 
         Destroy(this.gameObject);
+    }
+
+    private IEnumerator PullObject(Rigidbody rb, Vector3 goal, float duration)
+    {
+        Vector3 startPos = rb.position;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            rb.MovePosition(Vector3.Lerp(startPos, goal, t));
+
+            yield return new WaitForFixedUpdate();
+        }
+
+        rb.MovePosition(goal);
     }
 }

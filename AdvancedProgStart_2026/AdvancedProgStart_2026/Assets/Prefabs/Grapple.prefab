@@ -48,6 +48,9 @@ MonoBehaviour:
   Grappleable:
     serializedVersion: 2
     m_Bits: 1
+  Pullable:
+    serializedVersion: 2
+    m_Bits: 8
   grappleDistance: 25
   grappleDelay: 0.25
   overshootYAxis: 0

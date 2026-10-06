@@ -24,6 +24,7 @@ public class PlayerBody : MonoBehaviour
     public bool activeGrapple = false;
     private Vector3 velocityToSet;
     private Vector3 velocity;
+    private Grapple g;
 
     Vector2 moveInput;
     public Vector2 MoveInout
@@ -71,6 +72,11 @@ public class PlayerBody : MonoBehaviour
             s = Instantiate(s.gameObject, fireLocation.position, Quaternion.identity).GetComponent<Sword>();
             s.transform.rotation = turret.transform.rotation;
             s.gameObject.SetActive(true);
+            if(g != null)
+            {
+                g.StopGrapple();
+                activeGrapple = false;
+            }
         }
     }
     /// <summary>
@@ -93,11 +99,13 @@ public class PlayerBody : MonoBehaviour
 
     public void Fire(Bulllet.BulletType type = Bulllet.BulletType.Default)
     {
+        if (activeGrapple) return;
+
         Vector3 dir = fireLocation.forward;
         
         dir.Normalize();
 
-        Grapple g = grapple;
+        g = grapple;
 
         if(g != null)
         {
