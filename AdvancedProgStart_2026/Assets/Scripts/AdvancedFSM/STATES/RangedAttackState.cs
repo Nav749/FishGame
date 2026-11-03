@@ -1,10 +1,11 @@
+using System.Collections;
 using UnityEngine;
 
 public class RangedAttackState : FSMState
 {
     AttackProp attackProp;
     Harpooner harpooner;
-    GameObject bullet;
+    GameObject bulletPrefab;
     bool shooting;
 
     public RangedAttackState(Harpooner harp, AttackProp a)
@@ -13,9 +14,11 @@ public class RangedAttackState : FSMState
         harpooner = harp;
 
         stateID = StateID.Attack;
-        bullet = attackProp.bullet;
+        bulletPrefab = attackProp.bullet;
         curSpeed = attackProp.speed;
         curRotSpeed = attackProp.rotSpeed;
+
+        shooting = false;
     }
 
     public override void CheckTransitions(Transform player, Transform npc)
@@ -27,7 +30,9 @@ public class RangedAttackState : FSMState
     {
         while (!shooting)
         {
-
+            shooting = true;
+            harpooner.StartCoroutine(harpooner.FireBullet());
+            shooting = false;
         }
     }
 }

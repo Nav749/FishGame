@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -30,6 +31,8 @@ public class Harpooner : FiniteStateMachine
     public float Health => health;
     [SerializeField] private GameObject playerObj;
     NavMeshAgent agent;
+
+    [SerializeField] private float waitTime = 2f;
 
     private void Awake()
     {
@@ -67,5 +70,12 @@ public class Harpooner : FiniteStateMachine
             CurrentState.CheckTransitions(playerTransform, this.transform);
             CurrentState.UpdateBehavior(playerTransform, this.transform);
         }
+    }
+
+    public IEnumerator FireBullet()
+    {
+        GameObject b = Instantiate(attackProp.bullet);
+        Bulllet bullet = b.GetComponent<Bulllet>();
+        yield return new WaitForSeconds(waitTime);
     }
 }
