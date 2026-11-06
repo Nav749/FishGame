@@ -13,11 +13,13 @@ using System.Collections.Generic;
 public enum TransitionID
 {
     None = 0,
+    NoHealth,
 }
 
 public enum StateID
 {
     None = 0,
+    Dead
 }
 
 public abstract class FiniteStateMachine : MonoBehaviour
