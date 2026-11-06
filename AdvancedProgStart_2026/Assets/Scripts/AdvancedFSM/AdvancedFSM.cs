@@ -14,18 +14,22 @@ public enum TransitionID
 {
     None = 0,
     NoHealth,
+    FarEnough,
+    TooClose
 }
 
 public enum StateID
 {
     None = 0,
-    Dead
+    Dead,
+    Flee,
+    Attack
 }
 
 public abstract class FiniteStateMachine : MonoBehaviour
 {
     #region private fields
-    private List<FSMState> fsmStates;
+    private List<FSMState> fsmStates = new List<FSMState>();
     private StateID currentStateID;
     private FSMState currentState;
     #endregion
