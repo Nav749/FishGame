@@ -1,15 +1,32 @@
 using UnityEngine;
 
+public enum EnemyType
+{
+    Harpooner,
+    Flyer
+}
+
 public class DeadState : FSMState
 {
+    EnemyType enemyType;
     Harpooner h;
+    Flyer f;
     public DeadState(Harpooner harp)
     {
         stateID = StateID.Dead;
-
+        enemyType = EnemyType.Harpooner;
         curSpeed = 0;
         curRotSpeed = 0;
         h = harp;
+    }
+
+    public DeadState(Flyer harp)
+    {
+        stateID = StateID.Dead;
+        enemyType = EnemyType.Flyer;
+        curSpeed = 0;
+        curRotSpeed = 0;
+        f = harp;
     }
 
     public override void CheckTransitions(Transform player, Transform npc)
@@ -19,6 +36,13 @@ public class DeadState : FSMState
 
     public override void UpdateBehavior(Transform player, Transform npc)
     {
-        h.death();
+        if(enemyType == EnemyType.Harpooner)
+        {
+            h.death();
+        }
+        else if(enemyType == EnemyType.Flyer)
+        {
+            f.death();
+        }
     }
 }

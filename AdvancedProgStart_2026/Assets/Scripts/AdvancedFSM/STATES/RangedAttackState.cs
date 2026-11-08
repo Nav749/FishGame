@@ -5,7 +5,6 @@ public class RangedAttackState : FSMState
 {
     AttackProp attackProp;
     Harpooner harpooner;
-    bool shooting;
 
     public RangedAttackState(Harpooner harp, AttackProp a)
     {
@@ -15,8 +14,6 @@ public class RangedAttackState : FSMState
         stateID = StateID.Attack;
         curSpeed = attackProp.speed;
         curRotSpeed = attackProp.rotSpeed;
-
-        shooting = false;
     }
 
     public override void CheckTransitions(Transform player, Transform npc)
