@@ -1,5 +1,6 @@
 using NUnit.Compatibility;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -36,6 +37,11 @@ public class Harpooner : FiniteStateMachine
     [SerializeField] private float waitTime = 2f;
     [SerializeField] private Transform FireLocation;
 
+    [HideInInspector] public bool shooting;
+    [SerializeField] private GameObject pickupPrefab;
+
+    [SerializeField] TextMeshPro text;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -67,7 +73,7 @@ public class Harpooner : FiniteStateMachine
         fleeState.AddTransition(TransitionID.FarEnough, StateID.Attack);
         AddFSMState(fleeState);
 
-        DeadState deadState = new DeadState();
+        DeadState deadState = new DeadState(this);
         AddFSMState(deadState);
     }
 
@@ -78,11 +84,35 @@ public class Harpooner : FiniteStateMachine
             CurrentState.CheckTransitions(playerTransform, this.transform);
             CurrentState.UpdateBehavior(playerTransform, this.transform);
         }
+
+        text.text = CurrentState.ToString();
     }
 
     public IEnumerator FireBullet()
     {
+        shooting = true;
         GameObject b = Instantiate(attackProp.bullet, FireLocation.position, Quaternion.identity);
+        Bulllet bull = b.GetComponent<Bulllet>();
+        bull.Fire(this.transform.forward);
         yield return new WaitForSeconds(waitTime);
+        shooting = false;
+    }
+
+    public void LookatPlayer(Vector3 target, float speed)
+    {
+        Vector3 dir = target - transform.position;
+
+        if(dir != Vector3.zero)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(dir);
+
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, speed * Time.fixedDeltaTime);
+        }
+    }
+
+    public void death()
+    {
+        GameObject pickup = Instantiate(pickupPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

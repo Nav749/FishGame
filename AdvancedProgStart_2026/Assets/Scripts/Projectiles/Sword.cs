@@ -7,6 +7,7 @@ public class Sword : MonoBehaviour
     [SerializeField] private float LifeTime = 1f;
     [Range(30f, 100f), Tooltip("Amount of Force applied to Pushable Objects")]
     [SerializeField] private float force = 50f;
+    [SerializeField] private float damage = 40f;
 
     private void Start()
     {
@@ -18,6 +19,14 @@ public class Sword : MonoBehaviour
         if (other.CompareTag("Pushable"))
         {
             other.GetComponent<Rigidbody>().AddForce(transform.forward * force, ForceMode.Impulse);
+        }
+        else if (other.CompareTag("Enemy"))
+        {
+            Harpooner h;
+            if(other.TryGetComponent<Harpooner>(out h))
+            {
+                h.DecHealth(damage);
+            }
         }
     }
 }

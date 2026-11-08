@@ -23,13 +23,13 @@ public class RangedAttackState : FSMState
     {
         if (harpooner.Health == 0)
         {
-            shooting = false;
+            harpooner.shooting = false;
             harpooner.PerformTransition(TransitionID.NoHealth);
             return;
         }
-        else if(Vector3.Distance(player.position, npc.position) < 30f)
+        else if(Vector3.Distance(player.position, npc.position) < 10f)
         {
-            shooting = false;
+            harpooner.shooting = false;
             harpooner.PerformTransition(TransitionID.TooClose);
             return;
         }
@@ -37,11 +37,11 @@ public class RangedAttackState : FSMState
 
     public override void UpdateBehavior(Transform player, Transform npc)
     {
-        while (!shooting)
+        harpooner.LookatPlayer(player.position, curRotSpeed);
+
+        if (!harpooner.shooting)
         {
-            shooting = true;
             harpooner.StartCoroutine(harpooner.FireBullet());
-            shooting = false;
         }
     }
 }

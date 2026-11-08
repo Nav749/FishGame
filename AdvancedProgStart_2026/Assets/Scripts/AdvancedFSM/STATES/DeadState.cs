@@ -2,12 +2,14 @@ using UnityEngine;
 
 public class DeadState : FSMState
 {
-    public DeadState()
+    Harpooner h;
+    public DeadState(Harpooner harp)
     {
         stateID = StateID.Dead;
 
         curSpeed = 0;
         curRotSpeed = 0;
+        h = harp;
     }
 
     public override void CheckTransitions(Transform player, Transform npc)
@@ -17,6 +19,6 @@ public class DeadState : FSMState
 
     public override void UpdateBehavior(Transform player, Transform npc)
     {
-        //I'm Dead, no need to do shit
+        h.death();
     }
 }
