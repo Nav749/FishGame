@@ -1,3 +1,4 @@
+using NUnit.Compatibility;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -33,6 +34,7 @@ public class Harpooner : FiniteStateMachine
     NavMeshAgent agent;
 
     [SerializeField] private float waitTime = 2f;
+    [SerializeField] private Transform FireLocation;
 
     private void Awake()
     {
@@ -55,8 +57,14 @@ public class Harpooner : FiniteStateMachine
 
     private void ConstructFSM()
     {
+        RangedAttackState attacktate = new RangedAttackState(this, attackProp);
+        attacktate.AddTransition(TransitionID.NoHealth, StateID.Dead);
+        attacktate.AddTransition(TransitionID.TooClose, StateID.Flee);
+        AddFSMState(attacktate);
+
         FleeState fleeState = new FleeState(this, fleeProp, agent);
         fleeState.AddTransition(TransitionID.NoHealth, StateID.Dead);
+        fleeState.AddTransition(TransitionID.FarEnough, StateID.Attack);
         AddFSMState(fleeState);
 
         DeadState deadState = new DeadState();
@@ -74,8 +82,7 @@ public class Harpooner : FiniteStateMachine
 
     public IEnumerator FireBullet()
     {
-        GameObject b = Instantiate(attackProp.bullet);
-        Bulllet bullet = b.GetComponent<Bulllet>();
+        GameObject b = Instantiate(attackProp.bullet, FireLocation.position, Quaternion.identity);
         yield return new WaitForSeconds(waitTime);
     }
 }

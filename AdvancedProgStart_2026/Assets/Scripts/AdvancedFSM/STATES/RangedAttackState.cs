@@ -5,7 +5,6 @@ public class RangedAttackState : FSMState
 {
     AttackProp attackProp;
     Harpooner harpooner;
-    GameObject bulletPrefab;
     bool shooting;
 
     public RangedAttackState(Harpooner harp, AttackProp a)
@@ -14,7 +13,6 @@ public class RangedAttackState : FSMState
         harpooner = harp;
 
         stateID = StateID.Attack;
-        bulletPrefab = attackProp.bullet;
         curSpeed = attackProp.speed;
         curRotSpeed = attackProp.rotSpeed;
 
@@ -23,7 +21,18 @@ public class RangedAttackState : FSMState
 
     public override void CheckTransitions(Transform player, Transform npc)
     {
-        throw new System.NotImplementedException();
+        if (harpooner.Health == 0)
+        {
+            shooting = false;
+            harpooner.PerformTransition(TransitionID.NoHealth);
+            return;
+        }
+        else if(Vector3.Distance(player.position, npc.position) < 30f)
+        {
+            shooting = false;
+            harpooner.PerformTransition(TransitionID.TooClose);
+            return;
+        }
     }
 
     public override void UpdateBehavior(Transform player, Transform npc)

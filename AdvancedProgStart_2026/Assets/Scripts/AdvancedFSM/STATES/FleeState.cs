@@ -35,6 +35,11 @@ public class FleeState : FSMState
             harpooner.PerformTransition(TransitionID.NoHealth);
             return;
         }
+        else if (Vector3.Distance(player.position, npc.position) > 50f)
+        {
+            harpooner.PerformTransition(TransitionID.FarEnough);
+            return;
+        }
     }
 
     public override void UpdateBehavior(Transform player, Transform npc)
