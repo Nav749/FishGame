@@ -1,4 +1,6 @@
 using System;
+using System.Security.Cryptography;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -35,6 +37,18 @@ public class PatrolState : FSMState
             flyer.PerformTransition(TransitionID.NoHealth);
             return;
         }
+        else if(Vector3.Distance(player.position, new Vector3(npc.position.x, player.position.y, npc.position.z)) < 5f && !flyer.hasShot)
+        {
+            agent.ResetPath();
+            flyer.PerformTransition(TransitionID.TooClose);
+            return;
+        }
+    }
+
+    public override void EnterState(Transform player, Transform npc)
+    {
+        currentWaypoint = GetNewWaypoint();
+        agent.destination = currentWaypoint.position;
     }
 
     public override void UpdateBehavior(Transform player, Transform npc)
@@ -47,7 +61,6 @@ public class PatrolState : FSMState
                 agent.destination = currentWaypoint.position;
             }
         }
-        Debug.Log(currentWaypoint.position);
     }
 
     private Transform GetNewWaypoint()

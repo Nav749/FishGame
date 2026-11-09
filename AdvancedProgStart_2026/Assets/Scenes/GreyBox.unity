@@ -3699,7 +3699,7 @@ GameObject:
   - component: {fileID: 2028396129}
   m_Layer: 0
   m_Name: Flyer
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3727,13 +3727,16 @@ MonoBehaviour:
   bombProp:
     speed: 3
     rotSpeed: 2
-    bullet: {fileID: 6583076148064685069, guid: 90d54816076d0964b82f10fd4aa567eb, type: 3}
+    bullet: {fileID: 1245588272522384, guid: 0ffffed8ae6623a4b93ad5c777981d4e, type: 3}
   maxHealth: 100
   playerObj: {fileID: 1044774298}
+  waitTime: 2
   FireLocation: {fileID: 244077964}
   shooting: 0
+  hasShot: 0
   pickupPrefab: {fileID: 3313740006861567797, guid: 2544c4ca05608c24180b30dc341fc645, type: 3}
   text: {fileID: 282277640}
+  cooldown: 5
 --- !u!195 &2028396130
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class Grenade : Bulllet
     [Space(10f)]
     [Header("Explosion Variables")]
 
-    [Range(1f, 100000000000f)]
+    [Range(1f, 100f)]
     [SerializeField] float explosionSize = 5f;
 
     [Tooltip("Leave this at 1.0 to use deltatime")]

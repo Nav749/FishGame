@@ -23,9 +23,14 @@ public class Sword : MonoBehaviour
         else if (other.CompareTag("Enemy"))
         {
             Harpooner h;
+            Flyer f;
             if(other.TryGetComponent<Harpooner>(out h))
             {
                 h.DecHealth(damage);
+            }
+            else if(other.TryGetComponent<Flyer>(out f))
+            {
+                f.DecHealth(damage);
             }
         }
     }

@@ -29,10 +29,12 @@ public class Flyer : FiniteStateMachine
     [SerializeField] private float waitTime = 2f;
     [SerializeField] private Transform FireLocation;
 
-    [HideInInspector] public bool shooting;
+    [HideInInspector] public bool shooting = false;
+    [HideInInspector] public bool hasShot = false;
     [SerializeField] private GameObject pickupPrefab;
 
     [SerializeField] TextMeshPro text;
+    [SerializeField] float cooldown; 
 
     private void Awake()
     {
@@ -57,7 +59,13 @@ public class Flyer : FiniteStateMachine
     {
         PatrolState patrolState = new PatrolState(this, patrolProp, agent);
         patrolState.AddTransition(TransitionID.NoHealth, StateID.Dead);
+        patrolState.AddTransition(TransitionID.TooClose, StateID.Bomb);
         AddFSMState(patrolState);
+
+        BombState bombState = new BombState(this, bombProp);
+        bombState.AddTransition(TransitionID.NoHealth, StateID.Dead);
+        bombState.AddTransition(TransitionID.FarEnough, StateID.Patrol);
+        AddFSMState(bombState);
 
         DeadState deadState = new DeadState(this);
         AddFSMState(deadState);
@@ -85,8 +93,15 @@ public class Flyer : FiniteStateMachine
         shooting = true;
         GameObject b = Instantiate(bombProp.bullet, FireLocation.position, Quaternion.identity);
         Bulllet bull = b.GetComponent<Bulllet>();
-        bull.Fire(this.transform.forward);
+        bull.Fire(-this.transform.up);
         yield return new WaitForSeconds(waitTime);
+        hasShot = true;
+    }
+
+    public IEnumerator Cooldown()
+    {
+        yield return new WaitForSeconds(cooldown);
         shooting = false;
+        hasShot = false;
     }
 }

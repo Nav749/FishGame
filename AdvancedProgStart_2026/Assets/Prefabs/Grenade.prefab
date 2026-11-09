@@ -51,8 +51,8 @@ MonoBehaviour:
   type: 1
   speed: 10
   lifeTime: 20
-  explosionSize: 1e+11
-  expandSpeed: 10000
+  explosionSize: 20
+  expandSpeed: 10
   fadeAmount: 0.1
   fadeWait: 0.01
 --- !u!33 &33598652517847966

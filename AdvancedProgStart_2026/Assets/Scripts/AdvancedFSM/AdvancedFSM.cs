@@ -24,7 +24,8 @@ public enum StateID
     Dead,
     Flee,
     Attack,
-    Patrol
+    Patrol,
+    Bomb
 }
 
 public abstract class FiniteStateMachine : MonoBehaviour
