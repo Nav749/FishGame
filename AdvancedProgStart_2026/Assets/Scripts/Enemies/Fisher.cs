@@ -4,21 +4,20 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [System.Serializable]
-public class MeeleeProp: AIProp
+public class MeleeProp: AIProp
 {
     public GameObject hurtbox;
+    public float waitTime;
 }
 
 public class Fisher : FiniteStateMachine
 {
-    [SerializeField] private MeeleeProp meeleeProp;
+    [SerializeField] private MeleeProp meeleeProp;
     [SerializeField] private float maxHealth;
     private float health;
     public float Health => health;
     [SerializeField] private GameObject playerObj;
     NavMeshAgent agent;
-
-    [SerializeField] private float waitTime = 2f;
     [SerializeField] private Transform FireLocation;
 
     [HideInInspector] public bool shooting = false;
@@ -49,6 +48,10 @@ public class Fisher : FiniteStateMachine
 
     private void ConstructFSM()
     {
+        MeleeState meleeState = new MeleeState(this, meeleeProp);
+        meleeState.AddTransition(TransitionID.NoHealth, StateID.Dead);
+        AddFSMState(meleeState);
+
         DeadState deadState = new DeadState(this);
         AddFSMState(deadState);
     }
@@ -70,12 +73,22 @@ public class Fisher : FiniteStateMachine
         Destroy(gameObject);
     }
 
-    public IEnumerator FireBullet()
+    public IEnumerator FireBullet(float time)
     {
         shooting = true;
         GameObject s = Instantiate(meeleeProp.hurtbox, FireLocation.position, Quaternion.identity);
         Sword sword = s.GetComponent<Sword>();
-        yield return new WaitForSeconds(waitTime);
+        sword.user = User.Enemy;
+        yield return new WaitForSeconds(time);
+        shooting = false;
+    }
+
+    public IEnumerator FireBullet(float time, bool grapple)
+    {
+        shooting = true;
+        GameObject s = Instantiate(meeleeProp.hurtbox, FireLocation.position, Quaternion.identity);
+        Sword sword = s.GetComponent<Sword>();
+        yield return new WaitForSeconds(time);
         hasShot = true;
     }
 
@@ -84,5 +97,17 @@ public class Fisher : FiniteStateMachine
         yield return new WaitForSeconds(cooldown);
         shooting = false;
         hasShot = false;
+    }
+
+    public void LookatPlayer(Vector3 target, float speed)
+    {
+        Vector3 dir = target - transform.position;
+
+        if (dir != Vector3.zero)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(dir);
+
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, speed * Time.fixedDeltaTime);
+        }
     }
 }

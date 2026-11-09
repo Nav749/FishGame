@@ -25,7 +25,10 @@ public enum StateID
     Flee,
     Attack,
     Patrol,
-    Bomb
+    Bomb,
+    Chase,
+    Melee,
+    Grapple
 }
 
 public abstract class FiniteStateMachine : MonoBehaviour

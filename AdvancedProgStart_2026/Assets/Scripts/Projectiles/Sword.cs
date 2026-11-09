@@ -1,5 +1,11 @@
 using UnityEngine;
 
+public enum User
+{
+    Player,
+    Enemy
+}
+
 public class Sword : MonoBehaviour
 {
     [Header("Values")]
@@ -9,6 +15,8 @@ public class Sword : MonoBehaviour
     [SerializeField] private float force = 50f;
     [SerializeField] private float damage = 40f;
 
+    [HideInInspector] public User user = User.Player;
+
     private void Start()
     {
         Destroy(gameObject, LifeTime);
@@ -16,21 +24,36 @@ public class Sword : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Pushable"))
+        if(user == User.Player)
         {
-            other.GetComponent<Rigidbody>().AddForce(transform.forward * force, ForceMode.Impulse);
-        }
-        else if (other.CompareTag("Enemy"))
-        {
-            Harpooner h;
-            Flyer f;
-            if(other.TryGetComponent<Harpooner>(out h))
+            if (other.CompareTag("Pushable"))
             {
-                h.DecHealth(damage);
+                other.GetComponent<Rigidbody>().AddForce(transform.forward * force, ForceMode.Impulse);
             }
-            else if(other.TryGetComponent<Flyer>(out f))
+            else if (other.CompareTag("Enemy"))
             {
-                f.DecHealth(damage);
+                Harpooner h;
+                Flyer f;
+                Fisher fish;
+                if (other.TryGetComponent<Harpooner>(out h))
+                {
+                    h.DecHealth(damage);
+                }
+                else if (other.TryGetComponent<Flyer>(out f))
+                {
+                    f.DecHealth(damage);
+                }
+                else if (other.TryGetComponent<Fisher>(out fish))
+                {
+                    fish.DecHealth(damage);
+                }
+            }
+        }
+        else if(user == User.Enemy)
+        {
+            if (other.CompareTag("Player"))
+            {
+                other.GetComponent<Rigidbody>().AddForce(transform.forward * (force / 4), ForceMode.Impulse);
             }
         }
     }
