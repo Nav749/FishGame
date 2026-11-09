@@ -1,16 +1,26 @@
 using UnityEngine;
 
-public class BombState : MonoBehaviour
+public class BombState : FSMState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    Flyer flyer;
+    BombProp bombProp;
+
+    public BombState(Flyer f, BombProp b)
     {
-        
+        flyer = f;
+        bombProp = b;
+
+        curSpeed = bombProp.speed;
+        curRotSpeed = bombProp.rotSpeed;
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void CheckTransitions(Transform player, Transform npc)
     {
-        
+        throw new System.NotImplementedException();
+    }
+
+    public override void UpdateBehavior(Transform player, Transform npc)
+    {
+        throw new System.NotImplementedException();
     }
 }

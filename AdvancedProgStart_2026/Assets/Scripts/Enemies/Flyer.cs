@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
@@ -25,7 +26,7 @@ public class Flyer : FiniteStateMachine
     [SerializeField] private GameObject playerObj;
     NavMeshAgent agent;
 
-    //[SerializeField] private float waitTime = 2f;
+    [SerializeField] private float waitTime = 2f;
     [SerializeField] private Transform FireLocation;
 
     [HideInInspector] public bool shooting;
@@ -77,5 +78,15 @@ public class Flyer : FiniteStateMachine
     {
         GameObject pickup = Instantiate(pickupPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
+    }
+
+    public IEnumerator FireBullet()
+    {
+        shooting = true;
+        GameObject b = Instantiate(bombProp.bullet, FireLocation.position, Quaternion.identity);
+        Bulllet bull = b.GetComponent<Bulllet>();
+        bull.Fire(this.transform.forward);
+        yield return new WaitForSeconds(waitTime);
+        shooting = false;
     }
 }
