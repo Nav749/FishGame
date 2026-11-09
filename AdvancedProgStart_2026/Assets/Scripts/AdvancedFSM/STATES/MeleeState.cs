@@ -23,6 +23,11 @@ public class MeleeState : FSMState
             fisher.PerformTransition(TransitionID.NoHealth);
             return;
         }
+        else if (Vector3.Distance(player.position, npc.position) > 5f)
+        {
+            fisher.PerformTransition(TransitionID.FarEnough);
+            return;
+        }
     }
 
     public override void UpdateBehavior(Transform player, Transform npc)

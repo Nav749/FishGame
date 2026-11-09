@@ -13,6 +13,7 @@ public class MeleeProp: AIProp
 public class Fisher : FiniteStateMachine
 {
     [SerializeField] private MeleeProp meeleeProp;
+    [SerializeField] private AIProp chaseProp;
     [SerializeField] private float maxHealth;
     private float health;
     public float Health => health;
@@ -48,8 +49,14 @@ public class Fisher : FiniteStateMachine
 
     private void ConstructFSM()
     {
+        ChaseState chaseState = new ChaseState(this, chaseProp, agent);
+        chaseState.AddTransition(TransitionID.NoHealth, StateID.Dead);
+        chaseState.AddTransition(TransitionID.TooClose, StateID.Melee);
+        AddFSMState(chaseState);
+
         MeleeState meleeState = new MeleeState(this, meeleeProp);
         meleeState.AddTransition(TransitionID.NoHealth, StateID.Dead);
+        meleeState.AddTransition(TransitionID.FarEnough, StateID.Chase);
         AddFSMState(meleeState);
 
         DeadState deadState = new DeadState(this);
