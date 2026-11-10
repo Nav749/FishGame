@@ -74,9 +74,9 @@ public class PlayerBody : MonoBehaviour
             //Add movement to velocity to converse momentum
             rb.linearVelocity += moveDir;
 
-            Debug.Log(moveDir.magnitude);
             anim.SetFloat("Speed", moveDir.magnitude);
         }
+        anim.SetBool("InAir", !IsGrounded());
     }
 
     /// <summary>
@@ -224,4 +224,6 @@ public class PlayerBody : MonoBehaviour
 
         cam.Lens.FieldOfView = goalFov;
     }
+
+    private bool IsGrounded() => Physics.Raycast(transform.position, -Vector3.up, 2f);
 }

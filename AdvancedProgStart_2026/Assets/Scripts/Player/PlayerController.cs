@@ -37,7 +37,10 @@ public class PlayerController : MonoBehaviour
         {
             body.anim.SetTrigger("AttackMain");
         }
-        if (InputManager.Instance.AltAttack) body.Fire();
+        if (InputManager.Instance.AltAttack) 
+        {
+            body.anim.SetTrigger("Grapple");
+        }
     }
 
     /// <summary>

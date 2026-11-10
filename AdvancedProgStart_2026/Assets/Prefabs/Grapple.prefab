@@ -52,7 +52,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   grappleDistance: 25
-  grappleDelay: 0.25
+  grappleDelay: 0.1
   overshootYAxis: 0
   grapplingCd: 1
 --- !u!120 &1947343835377287973
