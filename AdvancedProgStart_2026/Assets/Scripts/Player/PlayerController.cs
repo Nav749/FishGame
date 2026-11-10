@@ -33,8 +33,10 @@ public class PlayerController : MonoBehaviour
         body.UpdateMove(move);
 
         //Fire Attacks
-        if (InputManager.Instance.AttackPresed) body.Swipe();
-
+        if (InputManager.Instance.AttackPresed)
+        {
+            body.anim.SetTrigger("AttackMain");
+        }
         if (InputManager.Instance.AltAttack) body.Fire();
     }
 

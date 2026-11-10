@@ -39,6 +39,9 @@ public class PlayerBody : MonoBehaviour
         }
     }
 
+    [HideInInspector] public Animator anim;
+    private ManFisherAnimEventHandler handler;
+
     #endregion
 
     private void Awake()
@@ -50,6 +53,8 @@ public class PlayerBody : MonoBehaviour
     private void Start()
     {
         cam.Lens.FieldOfView = normalFov;
+        handler = GetComponentInChildren<ManFisherAnimEventHandler>();
+        handler.player = this;
     }
 
     private void FixedUpdate()
@@ -68,6 +73,9 @@ public class PlayerBody : MonoBehaviour
 
             //Add movement to velocity to converse momentum
             rb.linearVelocity += moveDir;
+
+            Debug.Log(moveDir.magnitude);
+            anim.SetFloat("Speed", moveDir.magnitude);
         }
     }
 
