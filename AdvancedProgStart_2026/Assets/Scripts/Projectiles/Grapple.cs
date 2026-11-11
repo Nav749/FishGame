@@ -1,4 +1,3 @@
-using Mono.Cecil.Cil;
 using System.Collections;
 using UnityEngine;
 
@@ -12,6 +11,8 @@ public class Grapple : MonoBehaviour
     private Vector3 direction;
     private LineRenderer lr;
     private PlayerBody body;
+    private Rigidbody fishbody;
+    public User user = User.Player;
 
     [Header("Grappling")]
     [SerializeField] private float grappleDistance;
@@ -59,13 +60,18 @@ public class Grapple : MonoBehaviour
         body = b;
     }
 
+    public void UpdateBody(Rigidbody f)
+    {
+        fishbody = f;
+    }
+        
     public void StartGrapple()
     {
         if(grapplingCdTimer > 0) return;
 
         grappling = true;
 
-        body.activeGrapple = true;
+        if(body != null) body.activeGrapple = true;
 
         StopAllCoroutines();
 
@@ -87,7 +93,7 @@ public class Grapple : MonoBehaviour
         {
             grapplePoint = hit.point;
 
-            StartCoroutine(body.ChangeFov(body.grappleFov, grappleDelay));
+            if(body != null) StartCoroutine(body.ChangeFov(body.grappleFov, grappleDelay));
 
             Invoke("ExecuteGrapple", grappleDelay);
         }
@@ -104,20 +110,27 @@ public class Grapple : MonoBehaviour
 
     private void ExecuteGrapple()
     {
-        Transform t = body.gameObject.transform;
+        if(body != null)
+        {
+            Transform t = body.gameObject.transform;
 
-        Vector3 lowestPoint = new Vector3(t.position.x, t.position.y - 1f, t.position.z);
+            Vector3 lowestPoint = new Vector3(t.position.x, t.position.y - 1f, t.position.z);
 
-        float grapplePointRelativeYPos = grapplePoint.y - lowestPoint.y;
-        float highestPointOnArc = grapplePointRelativeYPos + overshootYAxis;
+            float grapplePointRelativeYPos = grapplePoint.y - lowestPoint.y;
+            float highestPointOnArc = grapplePointRelativeYPos + overshootYAxis;
 
-        if(grapplePointRelativeYPos < 0) highestPointOnArc = overshootYAxis;
+            if (grapplePointRelativeYPos < 0) highestPointOnArc = overshootYAxis;
 
-        body.JumpToPosition(grapplePoint, highestPointOnArc);
+            body.JumpToPosition(grapplePoint, highestPointOnArc);
 
-        StartCoroutine(body.ChangeFov(body.normalFov, 1f));
+            StartCoroutine(body.ChangeFov(body.normalFov, 1f));
 
-        Invoke("StopGrapple", 1f);
+            Invoke("StopGrapple", 1f);
+        }
+        else if(fishbody != null)
+        {
+            StartCoroutine(PullEnemy());
+        }
     }
 
     public void StopGrapple()
@@ -128,7 +141,7 @@ public class Grapple : MonoBehaviour
 
         lr.enabled = false;
 
-        body.activeGrapple = false;
+        if(body != null) body.activeGrapple = false;
 
         Destroy(this.gameObject);
     }
@@ -149,5 +162,33 @@ public class Grapple : MonoBehaviour
         }
 
         rb.MovePosition(goal);
+    }
+
+    private IEnumerator PullEnemy()
+    {
+        Vector3 direction = (fishbody.position - grapplePoint).normalized;
+
+        Vector3 destination = grapplePoint + direction * grappleDistance;
+
+        Vector3 startPosition = fishbody.position;
+
+        float elapsed = 0f;
+
+        while (elapsed < grappleDelay)
+        {
+            elapsed += Time.deltaTime;
+
+            float t = Mathf.Clamp01(elapsed / grappleDistance);
+
+            fishbody.MovePosition(
+                Vector3.Lerp(startPosition, destination, t)
+            );
+
+            yield return new WaitForFixedUpdate();
+        }
+
+        fishbody.MovePosition(destination);
+
+        StopGrapple();
     }
 }

@@ -10,6 +10,13 @@ public class MeleeProp: AIProp
     public float waitTime;
 }
 
+public class GrappleProp: AIProp
+{
+    public Grapple grapplePrefab;
+    public float radius = 15f;
+    public LayerMask layerMask;
+}
+
 public class Fisher : FiniteStateMachine
 {
     [SerializeField] private MeleeProp meeleeProp;
@@ -20,6 +27,7 @@ public class Fisher : FiniteStateMachine
     [SerializeField] private GameObject playerObj;
     NavMeshAgent agent;
     [SerializeField] private Transform FireLocation;
+    [SerializeField] private Rigidbody rb;
 
     [HideInInspector] public bool shooting = false;
     [HideInInspector] public bool hasShot = false;
