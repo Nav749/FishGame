@@ -12,15 +12,15 @@ public class MeleeProp: AIProp
 
 public class GrappleProp: AIProp
 {
-    public Grapple grapplePrefab;
-    public float radius = 15f;
-    public LayerMask layerMask;
+    public GameObject grapplePrefab;
+    public float waitTime;
 }
 
 public class Fisher : FiniteStateMachine
 {
     [SerializeField] private MeleeProp meeleeProp;
     [SerializeField] private AIProp chaseProp;
+    [SerializeField] private GrappleProp grappleProp;
     [SerializeField] private float maxHealth;
     private float health;
     public float Health => health;
@@ -35,6 +35,8 @@ public class Fisher : FiniteStateMachine
 
     [SerializeField] TextMeshPro text;
     [SerializeField] float cooldown;
+
+    private Grapple g;
 
     private void Awake()
     {
@@ -101,8 +103,14 @@ public class Fisher : FiniteStateMachine
     public IEnumerator FireBullet(float time, bool grapple)
     {
         shooting = true;
-        GameObject s = Instantiate(meeleeProp.hurtbox, FireLocation.position, Quaternion.identity);
-        Sword sword = s.GetComponent<Sword>();
+        GameObject s = Instantiate(grappleProp.grapplePrefab, FireLocation.position, Quaternion.identity);
+        g = s.GetComponent<Grapple>();
+        g.user = User.Enemy;
+        Vector3 dir = FireLocation.forward;
+        dir.Normalize();
+        g.UpdateDirection(dir);
+        g.UpdateStartPoint(FireLocation);
+        g.UpdateBody(rb);
         yield return new WaitForSeconds(time);
         hasShot = true;
     }

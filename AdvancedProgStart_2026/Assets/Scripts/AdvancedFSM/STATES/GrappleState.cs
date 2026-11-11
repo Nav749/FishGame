@@ -4,10 +4,9 @@ public class GrappleState : FSMState
 {
     Fisher fisher;
     GrappleProp grappleProp;
-    Transform fireLocation;
-    Rigidbody rb;
+    float time;
 
-    public GrappleState(Fisher f, GrappleProp g, Transform t, Rigidbody r)
+    public GrappleState(Fisher f, GrappleProp g)
     {
         fisher = f;
         grappleProp = g;
@@ -16,17 +15,34 @@ public class GrappleState : FSMState
 
         curSpeed = grappleProp.speed;
         curRotSpeed = grappleProp.rotSpeed;
-        fireLocation = t;
-        rb = r;
+        time = grappleProp.waitTime;
     }
     
     public override void CheckTransitions(Transform player, Transform npc)
     {
-        throw new System.NotImplementedException();
+        if (fisher.Health == 0)
+        {
+            fisher.PerformTransition(TransitionID.NoHealth);
+            return;
+        }
+        else if (Vector3.Distance(player.position, npc.position) < 30f && !fisher.shooting)
+        {
+            fisher.PerformTransition(TransitionID.FarEnough);
+            return;
+        }
+        else if (Vector3.Distance(player.position, npc.position) < 5f && !fisher.shooting)
+        {
+            fisher.PerformTransition(TransitionID.TooClose);
+            return;
+        }
     }
 
     public override void UpdateBehavior(Transform player, Transform npc)
     {
-        throw new System.NotImplementedException();
+        if (!fisher.shooting)
+        {
+            fisher.StartCoroutine(fisher.FireBullet(time, true));
+            fisher.StartCoroutine(fisher.Cooldown());
+        }
     }
 }
