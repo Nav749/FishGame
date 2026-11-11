@@ -15,7 +15,8 @@ public enum TransitionID
     None = 0,
     NoHealth,
     FarEnough,
-    TooClose
+    TooClose,
+    GreatDistance
 }
 
 public enum StateID

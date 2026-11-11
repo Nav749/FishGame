@@ -31,6 +31,12 @@ public class ChaseState : FSMState
             fisher.PerformTransition(TransitionID.TooClose);
             return;
         }
+        else if (Vector3.Distance(player.position, npc.position) > 30f && !fisher.hasShot)
+        {
+            agent.ResetPath();
+            fisher.PerformTransition(TransitionID.GreatDistance);
+            return;
+        }
     }
 
     public override void UpdateBehavior(Transform player, Transform npc)

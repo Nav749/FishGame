@@ -2999,14 +2999,21 @@ MonoBehaviour:
   chaseProp:
     speed: 3
     rotSpeed: 2
+  grappleProp:
+    speed: 3
+    rotSpeed: 2
+    grapplePrefab: {fileID: 1245588272522384, guid: d932fdd4bbd473d45952fe8e8ffc8da1, type: 3}
+    waitTime: 5
   maxHealth: 100
   playerObj: {fileID: 1044774298}
   FireLocation: {fileID: 302692123}
+  rb: {fileID: 1385728956}
   shooting: 0
   hasShot: 0
   pickupPrefab: {fileID: 3313740006861567797, guid: 2544c4ca05608c24180b30dc341fc645, type: 3}
   text: {fileID: 1347309817}
   cooldown: 5
+  activeGrapple: 0
 --- !u!195 &1385728955
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3054,7 +3061,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 94
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &1385728957
 CapsuleCollider:

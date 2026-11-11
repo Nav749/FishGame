@@ -10,6 +10,7 @@ public class MeleeProp: AIProp
     public float waitTime;
 }
 
+[System.Serializable]
 public class GrappleProp: AIProp
 {
     public GameObject grapplePrefab;
@@ -36,7 +37,10 @@ public class Fisher : FiniteStateMachine
     [SerializeField] TextMeshPro text;
     [SerializeField] float cooldown;
 
+    private Vector3 velocityToSet;
+
     private Grapple g;
+    public bool activeGrapple = false;
 
     private void Awake()
     {
@@ -62,11 +66,18 @@ public class Fisher : FiniteStateMachine
         ChaseState chaseState = new ChaseState(this, chaseProp, agent);
         chaseState.AddTransition(TransitionID.NoHealth, StateID.Dead);
         chaseState.AddTransition(TransitionID.TooClose, StateID.Melee);
+        chaseState.AddTransition(TransitionID.GreatDistance, StateID.Grapple);
         AddFSMState(chaseState);
+
+        GrappleState grappleState = new GrappleState(this, grappleProp, rb);
+        grappleState.AddTransition(TransitionID.NoHealth, StateID.Dead);
+        grappleState.AddTransition(TransitionID.FarEnough, StateID.Chase);
+        AddFSMState(grappleState);
 
         MeleeState meleeState = new MeleeState(this, meeleeProp);
         meleeState.AddTransition(TransitionID.NoHealth, StateID.Dead);
         meleeState.AddTransition(TransitionID.FarEnough, StateID.Chase);
+        meleeState.AddTransition(TransitionID.GreatDistance, StateID.Grapple);
         AddFSMState(meleeState);
 
         DeadState deadState = new DeadState(this);
@@ -110,7 +121,8 @@ public class Fisher : FiniteStateMachine
         dir.Normalize();
         g.UpdateDirection(dir);
         g.UpdateStartPoint(FireLocation);
-        g.UpdateBody(rb);
+        g.UpdateBody(this);
+        g.StartGrapple();
         yield return new WaitForSeconds(time);
         hasShot = true;
     }
@@ -120,6 +132,7 @@ public class Fisher : FiniteStateMachine
         yield return new WaitForSeconds(cooldown);
         shooting = false;
         hasShot = false;
+        Debug.Log("hfdjsaha");
     }
 
     public void LookatPlayer(Vector3 target, float speed)
@@ -132,5 +145,35 @@ public class Fisher : FiniteStateMachine
 
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, speed * Time.fixedDeltaTime);
         }
+    }
+
+    private Vector3 CalculateLaunch(Vector3 startPoint, Vector3 endPoint, float trajectoryHeight)
+    {
+        //sets gravity
+        float gravity = Physics.gravity.y;
+
+        //calculates the displacements
+        float displacementY = endPoint.y - startPoint.y;
+        Vector3 displacementXZ = new Vector3(endPoint.x - startPoint.x, 0f, endPoint.z - startPoint.z);
+
+        //using the displacements, calculates the velocity
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * trajectoryHeight);
+        Vector3 velocityXZ = displacementXZ / (Mathf.Sqrt(-2 * trajectoryHeight / gravity) + Mathf.Sqrt(2 * (displacementY - trajectoryHeight) / gravity));
+
+        //returns the components as one vector
+        return velocityXZ + velocityY;
+    }
+
+    public void JumpToPosition(Vector3 targetPosition, float trajectoryHeight)
+    {
+        //calls the calculate Lauch function
+        velocityToSet = CalculateLaunch(transform.position, targetPosition, trajectoryHeight);
+
+        Invoke("SetVelocity", 0.1f);
+    }
+
+    private void SetVelocity()
+    {
+        rb.linearVelocity += velocityToSet;
     }
 }

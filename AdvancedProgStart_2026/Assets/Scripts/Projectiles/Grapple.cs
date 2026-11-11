@@ -11,7 +11,7 @@ public class Grapple : MonoBehaviour
     private Vector3 direction;
     private LineRenderer lr;
     private PlayerBody body;
-    private Rigidbody fishbody;
+    private Fisher fishbody;
     public User user = User.Player;
 
     [Header("Grappling")]
@@ -60,7 +60,7 @@ public class Grapple : MonoBehaviour
         body = b;
     }
 
-    public void UpdateBody(Rigidbody f)
+    public void UpdateBody(Fisher f)
     {
         fishbody = f;
     }
@@ -72,6 +72,7 @@ public class Grapple : MonoBehaviour
         grappling = true;
 
         if(body != null) body.activeGrapple = true;
+        if (fishbody != null) fishbody.activeGrapple = true;
 
         StopAllCoroutines();
 
@@ -129,7 +130,18 @@ public class Grapple : MonoBehaviour
         }
         else if(fishbody != null)
         {
-            StartCoroutine(PullEnemy());
+            Transform t = fishbody.gameObject.transform;
+
+            Vector3 lowestPoint = new Vector3(t.position.x, t.position.y - 1f, t.position.z);
+
+            float grapplePointRelativeYPos = grapplePoint.y - lowestPoint.y;
+            float highestPointOnArc = grapplePointRelativeYPos + overshootYAxis;
+
+            if (grapplePointRelativeYPos < 0) highestPointOnArc = overshootYAxis;
+
+            fishbody.JumpToPosition(grapplePoint, highestPointOnArc);
+
+            Invoke("StopGrapple", 1f);
         }
     }
 
@@ -142,6 +154,7 @@ public class Grapple : MonoBehaviour
         lr.enabled = false;
 
         if(body != null) body.activeGrapple = false;
+        if (fishbody != null) fishbody.activeGrapple = true;
 
         Destroy(this.gameObject);
     }
@@ -162,33 +175,5 @@ public class Grapple : MonoBehaviour
         }
 
         rb.MovePosition(goal);
-    }
-
-    private IEnumerator PullEnemy()
-    {
-        Vector3 direction = (fishbody.position - grapplePoint).normalized;
-
-        Vector3 destination = grapplePoint + direction * grappleDistance;
-
-        Vector3 startPosition = fishbody.position;
-
-        float elapsed = 0f;
-
-        while (elapsed < grappleDelay)
-        {
-            elapsed += Time.deltaTime;
-
-            float t = Mathf.Clamp01(elapsed / grappleDistance);
-
-            fishbody.MovePosition(
-                Vector3.Lerp(startPosition, destination, t)
-            );
-
-            yield return new WaitForFixedUpdate();
-        }
-
-        fishbody.MovePosition(destination);
-
-        StopGrapple();
     }
 }
