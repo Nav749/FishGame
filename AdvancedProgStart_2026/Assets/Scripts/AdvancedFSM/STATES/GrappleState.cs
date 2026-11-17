@@ -55,7 +55,6 @@ public class GrappleState : FSMState
         {
             fisher.StartCoroutine(fisher.FireBullet(time, true));
             //fisher.StartCoroutine(fisher.Cooldown());
-            Debug.Log("dfhushfahdfosahfopiiahdfpoiahsfdpoihaspfdoiuhaspoiuihdsafopudhsafdjhaskfjhasofudnasfkvhsapi");
         }
     }
 }

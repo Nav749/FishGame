@@ -23,7 +23,7 @@ public class Flyer : FiniteStateMachine
     [SerializeField] private float maxHealth;
     private float health;
     public float Health => health;
-    [SerializeField] private GameObject playerObj;
+    private GameObject playerObj;
     NavMeshAgent agent;
 
     [SerializeField] private float waitTime = 2f;
@@ -39,6 +39,12 @@ public class Flyer : FiniteStateMachine
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+    }
+
+    private void Start()
+    {
+        playerObj = GameManager.Instance.ManFisherGo;
+        Initialize();
     }
 
     public void DecHealth(float amount)
@@ -79,7 +85,7 @@ public class Flyer : FiniteStateMachine
             CurrentState.UpdateBehavior(playerTransform, this.transform);
         }
 
-        text.text = CurrentState.ToString();
+        //text.text = CurrentState.ToString();
     }
 
     public void death()
@@ -91,7 +97,9 @@ public class Flyer : FiniteStateMachine
     public IEnumerator FireBullet()
     {
         shooting = true;
-        GameObject b = Instantiate(bombProp.bullet, FireLocation.position, Quaternion.identity);
+        GameObject b = ObjectPoolManager.Instance.GetPooledObject(ObjectPoolManager.PoolTypes.Bomb);
+        b.SetActive(true);
+        b.transform.position = FireLocation.position;
         Bulllet bull = b.GetComponent<Bulllet>();
         bull.Fire(-this.transform.up);
         yield return new WaitForSeconds(waitTime);

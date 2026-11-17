@@ -25,11 +25,6 @@ public class Grenade : Bulllet
         rb = GetComponent<Rigidbody>();
     }
 
-    protected override void Start()
-    {
-        base.Start();
-    }
-
     protected override void FixedUpdate()
     {
         if (rb != null)
@@ -41,12 +36,9 @@ public class Grenade : Bulllet
 
     protected override void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Wall"))
+        if (other.gameObject.CompareTag("Wall"))
         {
-            direction = Vector3.zero;
-            rb.useGravity = false;
-            rb.isKinematic = true;
-            StartCoroutine(KaBoom());
+            StartCoroutine(SelfDestruct());
         }
     }
 
@@ -83,8 +75,15 @@ public class Grenade : Bulllet
 
                 yield return new WaitForSeconds(fadeWait);
             }
-
-            Destroy(gameObject);
         }
+    }
+
+    protected override IEnumerator SelfDestruct()
+    {
+        direction = Vector3.zero;
+        rb.useGravity = false;
+        rb.isKinematic = true;
+        yield return StartCoroutine(KaBoom());
+        gameObject.SetActive(false);
     }
 }

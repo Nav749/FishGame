@@ -25,7 +25,7 @@ public class Fisher : FiniteStateMachine
     [SerializeField] private float maxHealth;
     private float health;
     public float Health => health;
-    [SerializeField] private GameObject playerObj;
+    private GameObject playerObj;
     NavMeshAgent agent;
     [SerializeField] private Transform FireLocation;
     [SerializeField] private Rigidbody rb;
@@ -45,6 +45,12 @@ public class Fisher : FiniteStateMachine
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+    }
+
+    private void Start()
+    {
+        playerObj = GameManager.Instance.ManFisherGo;
+        Initialize();
     }
 
     public void DecHealth(float amount)
@@ -92,7 +98,7 @@ public class Fisher : FiniteStateMachine
             CurrentState.UpdateBehavior(playerTransform, this.transform);
         }
 
-        text.text = CurrentState.ToString();
+        //text.text = CurrentState.ToString();
     }
 
     public void death()

@@ -30,7 +30,7 @@ public class Harpooner : FiniteStateMachine
     [SerializeField] private float maxHealth;
     private float health;
     public float Health => health;
-    [SerializeField] private GameObject playerObj;
+    private GameObject playerObj;
     NavMeshAgent agent;
 
     [SerializeField] private float waitTime = 2f;
@@ -46,6 +46,11 @@ public class Harpooner : FiniteStateMachine
         agent = GetComponent<NavMeshAgent>();
     }
 
+    private void Start()
+    {
+        playerObj = GameManager.Instance.ManFisherGo;
+        Initialize();
+    }
     public void DecHealth(float amount)
     {
         health = Mathf.Max(0, health - amount);
@@ -84,13 +89,15 @@ public class Harpooner : FiniteStateMachine
             CurrentState.UpdateBehavior(playerTransform, this.transform);
         }
 
-        text.text = CurrentState.ToString();
+        //text.text = CurrentState.ToString();
     }
 
     public IEnumerator FireBullet()
     {
         shooting = true;
-        GameObject b = Instantiate(attackProp.bullet, FireLocation.position, Quaternion.identity);
+        GameObject b = ObjectPoolManager.Instance.GetPooledObject(ObjectPoolManager.PoolTypes.Bullet);
+        b.SetActive(true);
+        b.transform.position = FireLocation.position;
         Bulllet bull = b.GetComponent<Bulllet>();
         bull.Fire(this.transform.forward);
         yield return new WaitForSeconds(waitTime);

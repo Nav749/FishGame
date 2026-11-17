@@ -50,7 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Grenade
   type: 1
   speed: 10
-  lifeTime: 20
+  lifeTime: 5
   explosionSize: 20
   expandSpeed: 10
   fadeAmount: 0.1

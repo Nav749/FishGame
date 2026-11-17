@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Bulllet : MonoBehaviour
 {
@@ -10,11 +11,6 @@ public class Bulllet : MonoBehaviour
     [SerializeField] protected float lifeTime = 5f;
 
     protected Vector3 direction = Vector3.forward;
-
-    protected virtual void Start()
-    {
-        Destroy(gameObject, lifeTime);
-    }
 
     public void Fire(Vector3 dir)
     {
@@ -28,9 +24,22 @@ public class Bulllet : MonoBehaviour
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Wall"))
-        {
-            Destroy(gameObject);
-        }
+        gameObject.SetActive(false);
+    }
+
+    public void OnEnable()
+    {
+        StartCoroutine(SelfDestruct());
+    }
+
+    public void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+
+    protected virtual IEnumerator SelfDestruct()
+    {
+        yield return new WaitForSeconds(lifeTime);
+        gameObject.SetActive(false);
     }
 }
