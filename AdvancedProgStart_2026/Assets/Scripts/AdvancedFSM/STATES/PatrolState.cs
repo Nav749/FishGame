@@ -24,7 +24,7 @@ public class PatrolState : FSMState
         curRotSpeed = patrolProp.rotSpeed;
 
         agent = a;
-        agent.baseOffset = 11.8f;
+        agent.baseOffset = 8f;
         currentWaypoint = GetNewWaypoint();
         agent.destination = currentWaypoint.position;
     }

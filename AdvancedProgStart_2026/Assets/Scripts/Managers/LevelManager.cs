@@ -24,18 +24,27 @@ public class LevelManager : MonoBehaviour
         {
             waves.Enqueue(enemy);
         }
+    }
+
+    private void Start()
+    {
         spawnEnemyWave();
     }
 
-    private void spawnEnemyWave()
+    public void spawnEnemyWave()
     {
-        if(waves.Count < 0)
+        if(waves.Count == 0)
         {
             progressLevel = true;
             return;
         }
         GameObject wave = waves.Dequeue();
         GameObject waveOfEnemies = Instantiate(wave, Vector3.zero, Quaternion.identity);
+        WaveManager waveManager = waveOfEnemies.GetComponent<WaveManager>();
+        foreach (GameObject enemy in waveManager.Enemies)
+        {
+            enemy.GetComponent<EnemyBase>().Agent.Warp(enemy.transform.position);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

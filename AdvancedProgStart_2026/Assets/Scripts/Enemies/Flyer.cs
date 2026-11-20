@@ -15,16 +15,10 @@ public class BombProp : AIProp
     public GameObject bullet;
 }
 
-public class Flyer : FiniteStateMachine
+public class Flyer : EnemyBase
 {
     [SerializeField] PatrolProp patrolProp;
     [SerializeField] BombProp bombProp;
-
-    [SerializeField] private float maxHealth;
-    private float health;
-    public float Health => health;
-    private GameObject playerObj;
-    NavMeshAgent agent;
 
     [SerializeField] private float waitTime = 2f;
     [SerializeField] private Transform FireLocation;
@@ -88,12 +82,6 @@ public class Flyer : FiniteStateMachine
         //text.text = CurrentState.ToString();
     }
 
-    public void death()
-    {
-        GameObject pickup = Instantiate(pickupPrefab, transform.position, Quaternion.identity);
-        Destroy(gameObject);
-    }
-
     public IEnumerator FireBullet()
     {
         shooting = true;
@@ -111,5 +99,11 @@ public class Flyer : FiniteStateMachine
         yield return new WaitForSeconds(cooldown);
         shooting = false;
         hasShot = false;
+    }
+
+    public void death()
+    {
+        GameObject pickup = Instantiate(pickupPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

@@ -22,22 +22,15 @@ public class AttackProp: AIProp
     public GameObject bullet;
 }
 
-public class Harpooner : FiniteStateMachine
+public class Harpooner : EnemyBase
 {
     [SerializeField] FleeProp fleeProp;
     [SerializeField] AttackProp attackProp;
 
-    [SerializeField] private float maxHealth;
-    private float health;
-    public float Health => health;
-    private GameObject playerObj;
-    NavMeshAgent agent;
-
     [SerializeField] private float waitTime = 2f;
     [SerializeField] private Transform FireLocation;
-
-    [HideInInspector] public bool shooting;
     [SerializeField] private GameObject pickupPrefab;
+    [HideInInspector] public bool shooting;
 
     [SerializeField] TextMeshPro text;
 

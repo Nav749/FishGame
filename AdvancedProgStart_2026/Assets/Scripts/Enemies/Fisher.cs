@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem.Processors;
 
 [System.Serializable]
 public class MeleeProp: AIProp
@@ -17,16 +18,12 @@ public class GrappleProp: AIProp
     public float waitTime;
 }
 
-public class Fisher : FiniteStateMachine
+public class Fisher : EnemyBase
 {
     [SerializeField] private MeleeProp meeleeProp;
     [SerializeField] private AIProp chaseProp;
     [SerializeField] private GrappleProp grappleProp;
-    [SerializeField] private float maxHealth;
-    private float health;
-    public float Health => health;
-    private GameObject playerObj;
-    NavMeshAgent agent;
+
     [SerializeField] private Transform FireLocation;
     [SerializeField] private Rigidbody rb;
 
@@ -99,12 +96,6 @@ public class Fisher : FiniteStateMachine
         }
 
         //text.text = CurrentState.ToString();
-    }
-
-    public void death()
-    {
-        GameObject pickup = Instantiate(pickupPrefab, transform.position, Quaternion.identity);
-        Destroy(gameObject);
     }
 
     public IEnumerator FireBullet(float time)
@@ -181,5 +172,11 @@ public class Fisher : FiniteStateMachine
     private void SetVelocity()
     {
         rb.linearVelocity += velocityToSet;
+    }
+
+    public void death()
+    {
+        GameObject pickup = Instantiate(pickupPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }
