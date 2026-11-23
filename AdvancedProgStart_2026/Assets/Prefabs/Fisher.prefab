@@ -180,6 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f972e9e5b723ab46bdf039304652665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fisher
+  maxHealth: 100
   meeleeProp:
     speed: 3
     rotSpeed: 2
@@ -188,14 +189,19 @@ MonoBehaviour:
   chaseProp:
     speed: 3
     rotSpeed: 2
-  maxHealth: 100
-  playerObj: {fileID: 0}
+  grappleProp:
+    speed: 3
+    rotSpeed: 2
+    grapplePrefab: {fileID: 0}
+    waitTime: 0
   FireLocation: {fileID: 18929751616113912}
+  rb: {fileID: 8209819488917289951}
   shooting: 0
   hasShot: 0
   pickupPrefab: {fileID: 3313740006861567797, guid: 2544c4ca05608c24180b30dc341fc645, type: 3}
   text: {fileID: 4077206849993245244}
   cooldown: 5
+  activeGrapple: 0
 --- !u!1 &2302795410885380184
 GameObject:
   m_ObjectHideFlags: 0

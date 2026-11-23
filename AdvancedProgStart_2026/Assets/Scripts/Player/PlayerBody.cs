@@ -90,7 +90,7 @@ public class PlayerBody : MonoBehaviour
         if(s != null)
         {
             //spawns sword if null
-            s = Instantiate(s.gameObject, fireLocation.position, Quaternion.identity).GetComponent<Sword>();
+            s = Instantiate(s.gameObject, fireLocation.position, Quaternion.identity, fireLocation).GetComponent<Sword>();
             s.transform.rotation = turret.transform.rotation;
             s.gameObject.SetActive(true);
 
