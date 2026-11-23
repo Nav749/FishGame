@@ -4,6 +4,15 @@ public class Pickup : MonoBehaviour
 {
     [Range(30f, 120f), Tooltip("Sets the Rotation speed of the Pickup")]
     [SerializeField] float rotationSpeed;
+    [SerializeField] ParticleSystem particle;
+    private ParticleSystem.MainModule main;
+
+    private void Start()
+    {
+        main = particle.main;
+        particle.Play();
+        main.loop = true;
+    }
 
     private void Update()
     {
@@ -23,6 +32,7 @@ public class Pickup : MonoBehaviour
         //Check if its the player and destroy oneself
         if (other.gameObject.CompareTag("Player"))
         {
+            particle.Stop();
             Destroy(gameObject);
         }
     }

@@ -30,6 +30,9 @@ public class PlayerBody : MonoBehaviour
     [SerializeField] private GameObject turret;
     [HideInInspector] public Transform Turret { get { return turret.transform; } }
 
+    [SerializeField] private ParticleSystem slash;
+    [SerializeField] private ParticleSystem zoom;
+
     Vector2 moveInput;
     public Vector2 MoveInout
     {
@@ -75,6 +78,15 @@ public class PlayerBody : MonoBehaviour
             rb.linearVelocity += moveDir;
 
             anim.SetFloat("Speed", moveDir.magnitude);
+
+            if(moveDir.magnitude > 1.25f && !zoom.isPlaying)
+            {
+                zoom.Play();
+            }
+            else if(moveDir.magnitude < 1.25f && zoom.isPlaying)
+            {
+                zoom.Stop();
+            }
         }
         anim.SetBool("InAir", !IsGrounded());
     }
@@ -93,6 +105,7 @@ public class PlayerBody : MonoBehaviour
             s = Instantiate(s.gameObject, fireLocation.position, Quaternion.identity, fireLocation).GetComponent<Sword>();
             s.transform.rotation = turret.transform.rotation;
             s.gameObject.SetActive(true);
+            slash.Play();
 
             if(g != null)
             {
