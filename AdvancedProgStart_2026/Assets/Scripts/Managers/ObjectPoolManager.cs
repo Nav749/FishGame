@@ -21,6 +21,16 @@ public class ObjectPoolManager : MonoBehaviour
         instance = this;
     }
 
+    private void OnEnable()
+    {
+        GameEvents.OnGameReset += GameReset;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnGameReset -= GameReset;
+    }
+
     private void Start()
     {
         GetComponentsInChildren<ObjectPool>(objectPools);

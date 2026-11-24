@@ -50,12 +50,19 @@ public class GameManager : MonoBehaviour
 
     public void LevelComplete()
     {
-        ObjectPoolManager.Instance.GameReset();
+        GameEvents.RaiseGameReset();
 
         LoadingManager.currentLevel++;
         if(LoadingManager.currentLevel < levelNames.Length)
         {
             StartCoroutine(LoadingManager.LoadLevel(levelNames[LoadingManager.currentLevel]));
         }
+    }
+
+    public void PlayerDeath()
+    {
+        manFisherGO.transform.position = Vector3.zero;
+        manFisher.transform.rotation = Quaternion.identity;
+        GameEvents.RaiseGameReset();
     }
 }

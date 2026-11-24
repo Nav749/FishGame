@@ -44,6 +44,6 @@ public class StatManager : MonoBehaviour
     {
         speedIncrements = 0f;
 
-        speedBoost = 150f * (speedIncrements / (speedIncrements + 100f));
+        speedBoost = 1f;
     }
 }

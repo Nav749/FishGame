@@ -10,6 +10,7 @@ public class LevelManager : MonoBehaviour
     private Queue<GameObject> waves;
 
     private bool progressLevel;
+    GameObject waveOfEnemies;
 
     private void Awake()
     {
@@ -26,6 +27,16 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        GameEvents.OnGameReset += Reset;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnGameReset -= Reset;
+    }
+
     private void Start()
     {
         spawnEnemyWave();
@@ -39,7 +50,7 @@ public class LevelManager : MonoBehaviour
             return;
         }
         GameObject wave = waves.Dequeue();
-        GameObject waveOfEnemies = Instantiate(wave, Vector3.zero, Quaternion.identity);
+        waveOfEnemies = Instantiate(wave, Vector3.zero, Quaternion.identity);
         WaveManager waveManager = waveOfEnemies.GetComponent<WaveManager>();
         foreach (GameObject enemy in waveManager.Enemies)
         {
@@ -60,5 +71,18 @@ public class LevelManager : MonoBehaviour
             UIManager.Instance.UpdatePickupCounter();
             GameManager.Instance.LevelComplete();
         }
+    }
+
+    private void Reset()
+    {
+        progressLevel=false;
+        Destroy(waveOfEnemies);
+        waves.Clear();
+        waves = new Queue<GameObject>();
+        foreach (GameObject enemy in enemyWaves)
+        {
+            waves.Enqueue(enemy);
+        }
+        spawnEnemyWave();
     }
 }

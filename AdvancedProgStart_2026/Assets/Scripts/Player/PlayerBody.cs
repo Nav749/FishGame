@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Unity.Cinemachine;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class PlayerBody : MonoBehaviour
 {
@@ -33,6 +34,12 @@ public class PlayerBody : MonoBehaviour
     [SerializeField] private ParticleSystem slash;
     [SerializeField] private ParticleSystem zoom;
 
+    private bool isDead;
+    public bool canMove = true;
+    [SerializeField]private float maxHealth = 100f;
+    private float health;
+    public float Health => health;
+
     Vector2 moveInput;
     public Vector2 MoveInout
     {
@@ -42,8 +49,14 @@ public class PlayerBody : MonoBehaviour
         }
     }
 
+    private GameObject mesh;
+
     [HideInInspector] public Animator anim;
     private ManFisherAnimEventHandler handler;
+
+    [SerializeField] private int cubesPerAxis = 10;
+    [SerializeField] private float force = 300f;
+    [SerializeField] private float radius = 2f;
 
     #endregion
 
@@ -51,6 +64,8 @@ public class PlayerBody : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         velocity = Vector3.zero;
+        health = maxHealth;
+        isDead = false;
     }
 
     private void Start()
@@ -58,11 +73,42 @@ public class PlayerBody : MonoBehaviour
         cam.Lens.FieldOfView = normalFov;
         handler = GetComponentInChildren<ManFisherAnimEventHandler>();
         handler.player = this;
+        mesh = this.transform.GetChild(0).gameObject;
+    }
+
+    private void OnEnable()
+    {
+        GameEvents.OnGameReset += GameReset;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnGameReset -= GameReset;
+    }
+
+    private void GameReset()
+    {
+        activeGrapple = false;
+        health = maxHealth;
+        isDead = false;
+        canMove = true;
+        StatManager.Instance.ResetStats();
+        mesh.SetActive(true);
+    }
+
+    private void Update()
+    {
+        if(health <= 0 && !isDead)
+        {
+            StartCoroutine(Death());
+        }
     }
 
     private void FixedUpdate()
     {
-        if(!activeGrapple)
+        if (!canMove) return;
+        Debug.Log("I can move");
+        if (!activeGrapple)
         {
             //get the relative forward and right of the player and add the inputs
             Vector3 relativeForward = transform.forward * moveInput.y;
@@ -73,17 +119,18 @@ public class PlayerBody : MonoBehaviour
 
             //move the player by angle to move, move speed, the speedBoost, and fixed delta time
             Vector3 moveDir = new Vector3(relativeAngle.x, 0, relativeAngle.z) * moveSpeed * StatManager.Instance.SpeedBoost * Time.fixedDeltaTime;
+            Debug.Log(moveDir);
 
             //Add movement to velocity to converse momentum
             rb.linearVelocity += moveDir;
 
             anim.SetFloat("Speed", moveDir.magnitude);
 
-            if(moveDir.magnitude > 1.25f && !zoom.isPlaying)
+            if (moveDir.magnitude > 1.25f && !zoom.isPlaying)
             {
                 zoom.Play();
             }
-            else if(moveDir.magnitude < 1.25f && zoom.isPlaying)
+            else if (moveDir.magnitude < 1.25f && zoom.isPlaying)
             {
                 zoom.Stop();
             }
@@ -239,4 +286,55 @@ public class PlayerBody : MonoBehaviour
     }
 
     private bool IsGrounded() => Physics.Raycast(transform.position, -Vector3.up, 2f);
+
+    private IEnumerator Death()
+    {
+        isDead = true;
+        canMove = false;
+        deathTime();
+        yield return new WaitForSeconds(7);
+        GameManager.Instance.PlayerDeath();
+    }
+
+    public void UpdateHealth(float damage)
+    {
+        health = Mathf.Max(0, health - damage);
+    }
+
+    private void deathTime()
+    {
+        mesh.SetActive(false);
+
+        MakeCubes();
+    }
+
+    void MakeCubes()
+    {
+        for(int x = 0; x < cubesPerAxis; x++)
+        {
+            for(int y = 0; y < cubesPerAxis; y++)
+            {
+                for(int z = 0; z < cubesPerAxis; z++)
+                    CreateCube(new Vector3(x, y, z));
+            }
+        }
+    }
+
+    void CreateCube(Vector3 coordinates)
+    {
+        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+        Renderer rd = this.GetComponent<Renderer>();
+        rd.material = GetComponent<Renderer>().material;
+
+        cube.transform.localScale = transform.localScale / cubesPerAxis;
+
+        Vector3 firstCube = transform.position - transform.localScale / 2 + cube.transform.localScale / 2;
+        cube.transform.position = firstCube + Vector3.Scale(coordinates, cube.transform.localScale);
+
+        Rigidbody rb = cube.AddComponent<Rigidbody>();
+        rb.AddExplosionForce(force, transform.position, radius);
+
+        Destroy(cube, 7f);
+    }
 }

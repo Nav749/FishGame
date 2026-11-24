@@ -9,6 +9,7 @@ public class Bulllet : MonoBehaviour
 
     [SerializeField] protected float speed = 5f;
     [SerializeField] protected float lifeTime = 5f;
+    [SerializeField] protected float damage = 5f;
 
     protected Vector3 direction = Vector3.forward;
 
@@ -24,6 +25,11 @@ public class Bulllet : MonoBehaviour
 
     protected virtual void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Player"))
+        {
+            other.GetComponent<PlayerBody>().UpdateHealth(damage);
+        }
+
         gameObject.SetActive(false);
     }
 
