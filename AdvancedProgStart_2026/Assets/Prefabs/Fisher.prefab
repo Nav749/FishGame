@@ -180,7 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f972e9e5b723ab46bdf039304652665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fisher
-  maxHealth: 100
+  maxHealth: 150
   meeleeProp:
     speed: 3
     rotSpeed: 2
@@ -192,7 +192,7 @@ MonoBehaviour:
   grappleProp:
     speed: 3
     rotSpeed: 2
-    grapplePrefab: {fileID: 0}
+    grapplePrefab: {fileID: 1245588272522384, guid: d932fdd4bbd473d45952fe8e8ffc8da1, type: 3}
     waitTime: 0
   FireLocation: {fileID: 18929751616113912}
   rb: {fileID: 8209819488917289951}

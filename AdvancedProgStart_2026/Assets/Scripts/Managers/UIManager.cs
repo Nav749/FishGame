@@ -27,7 +27,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void UpdatePickupCounter()
     {
-        pickupCounterValue += 1;
+        pickupCounterValue = StatManager.Instance.SpeedIncrements;
         pickupCounter.text = pickupCounterValue.ToString();
     }
 }

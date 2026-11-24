@@ -27,7 +27,5 @@ public class WaveManager : MonoBehaviour
             LevelManager.Instance.spawnEnemyWave();
             Destroy(gameObject);
         }
-
-        Debug.Log(enemies.Count);
     }
 }

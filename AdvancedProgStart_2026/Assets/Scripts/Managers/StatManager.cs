@@ -17,6 +17,14 @@ public class StatManager : MonoBehaviour
         }
     }
 
+    public float SpeedIncrements
+    {
+        get
+        {
+            return speedIncrements;
+        }
+    }
+
     private void Awake()
     {
         Instance = this;
@@ -30,5 +38,12 @@ public class StatManager : MonoBehaviour
         speedIncrements++;
 
         speedBoost = 150f * (speedIncrements / (speedIncrements + 100f)); 
+    }
+
+    public void ResetStats()
+    {
+        speedIncrements = 0f;
+
+        speedBoost = 150f * (speedIncrements / (speedIncrements + 100f));
     }
 }

@@ -56,6 +56,8 @@ public class LevelManager : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
+            StatManager.Instance.ResetStats();
+            UIManager.Instance.UpdatePickupCounter();
             GameManager.Instance.LevelComplete();
         }
     }

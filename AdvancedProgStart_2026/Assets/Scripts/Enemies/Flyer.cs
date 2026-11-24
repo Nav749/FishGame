@@ -85,7 +85,7 @@ public class Flyer : EnemyBase
     public IEnumerator FireBullet()
     {
         shooting = true;
-        GameObject b = ObjectPoolManager.Instance.GetPooledObject(ObjectPoolManager.PoolTypes.Bomb);
+        GameObject b = Instantiate(bombProp.bullet, FireLocation.position, Quaternion.identity);
         b.SetActive(true);
         b.transform.position = FireLocation.position;
         Bulllet bull = b.GetComponent<Bulllet>();

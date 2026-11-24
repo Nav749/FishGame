@@ -84,6 +84,6 @@ public class Grenade : Bulllet
         rb.useGravity = false;
         rb.isKinematic = true;
         yield return StartCoroutine(KaBoom());
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }

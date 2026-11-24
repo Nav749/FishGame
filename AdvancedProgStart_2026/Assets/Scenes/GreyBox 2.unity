@@ -205,9 +205,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   enemyWaves:
-  - {fileID: 4245366694985907176, guid: b5cccf9c63712a14f939fc7e5deacb5a, type: 3}
   - {fileID: 2847209059092762463, guid: b21084c78391b154d9913fbfab52b1cb, type: 3}
+  - {fileID: 7325859090295751214, guid: 3102e70504e4eea4fb245f091c4a8b42, type: 3}
+  - {fileID: 2946080943489768077, guid: 8a286dcda4a9ced4a82318b5acf1bbc7, type: 3}
   - {fileID: 2649979490467370546, guid: e5d99e91cdcfc4344b4a2a9a2944a2db, type: 3}
+  - {fileID: 4245366694985907176, guid: b5cccf9c63712a14f939fc7e5deacb5a, type: 3}
+  - {fileID: 8806660602196257256, guid: b95c8d64293597c42ba289aa60cd8228, type: 3}
 --- !u!136 &162943633
 CapsuleCollider:
   m_ObjectHideFlags: 0

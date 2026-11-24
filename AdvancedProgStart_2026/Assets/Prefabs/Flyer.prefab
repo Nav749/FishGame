@@ -211,6 +211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4dfdb48fd354a349860fd5bd12d4e68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Flyer
+  maxHealth: 30
   patrolProp:
     speed: 3
     rotSpeed: 2
@@ -219,8 +220,6 @@ MonoBehaviour:
     speed: 3
     rotSpeed: 2
     bullet: {fileID: 1245588272522384, guid: 0ffffed8ae6623a4b93ad5c777981d4e, type: 3}
-  maxHealth: 100
-  playerObj: {fileID: 0}
   waitTime: 2
   FireLocation: {fileID: 2916312850651937000}
   shooting: 0
