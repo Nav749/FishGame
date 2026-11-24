@@ -51,6 +51,7 @@ MonoBehaviour:
   type: 1
   speed: 10
   lifeTime: 5
+  damage: 10
   explosionSize: 20
   expandSpeed: 10
   fadeAmount: 0.1

@@ -54,6 +54,7 @@ public class Sword : MonoBehaviour
             if (other.CompareTag("Player"))
             {
                 other.GetComponent<Rigidbody>().AddForce(transform.forward * (force / 4), ForceMode.Impulse);
+                other.GetComponent<PlayerBody>().UpdateHealth(damage/2);
             }
         }
     }

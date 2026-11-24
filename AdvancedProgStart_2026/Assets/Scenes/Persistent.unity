@@ -570,8 +570,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1744002974}
     - target: {fileID: 7515259361732109991, guid: 686a80c6da7b8114caf515df988b8b9a, type: 3}
+      propertyPath: force
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 7515259361732109991, guid: 686a80c6da7b8114caf515df988b8b9a, type: 3}
+      propertyPath: radius
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7515259361732109991, guid: 686a80c6da7b8114caf515df988b8b9a, type: 3}
       propertyPath: maxHealth
-      value: 5
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7515259361732109991, guid: 686a80c6da7b8114caf515df988b8b9a, type: 3}
+      propertyPath: cubesPerAxis
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 9122313009628515868, guid: 686a80c6da7b8114caf515df988b8b9a, type: 3}
       propertyPath: m_LocalPosition.x
